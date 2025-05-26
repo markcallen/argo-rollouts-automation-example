@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: error-rate-check
+spec:
+  metrics:
+  - name: error-rate
+    interval: 1m
+    failureCondition: result > 0.05
+    provider:
+      prometheus:
+        address: http://prometheus-server
+        query: sum(rate(istio_requests_total{destination_service="example-app", response_code="500"}[1m]))

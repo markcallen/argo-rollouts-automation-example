@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: example-app
+spec:
+  replicas: 3
+  strategy:
+    canary:
+      steps:
+      - setWeight: 10
+      - pause: {duration: 2m}
+      - analysis:
+          templates:
+          - templateName: error-rate-check
+      - setWeight: 50
+      - pause: {duration: 5m}
+      - analysis:
+          templates:
+          - templateName: error-rate-check
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: app
+        image: your-dockerhub/example-app:latest
+        ports:
+        - containerPort: 8080

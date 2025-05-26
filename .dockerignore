@@ -1,0 +1,11 @@
+.env
+.git
+.vscode
+*.log
+README.md
+
+.github
+
+grafana
+manifests
+prometheus
